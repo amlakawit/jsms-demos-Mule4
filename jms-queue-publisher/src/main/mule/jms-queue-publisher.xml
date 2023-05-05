@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7c913bbc-fc38-4d32-8014-ffdc64b25caa" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="2a48f3b1-47cb-421b-bd8a-c9a01e2659ed" >
+		<jms:active-mq-connection username="admin" password="admin" >
+			<jms:factory-configuration brokerUrl="tcp://localhost:61616" />
+		</jms:active-mq-connection>
+	</jms:config>
+	<flow name="jms-queue-publisherFlow" doc:id="8135acb4-c239-4f40-a3ca-4c6d760305be" >
+		<http:listener doc:name="/GET:jsm-queue-publish" doc:id="06c136c9-ded0-4fa0-88e3-9dc023e19de8" config-ref="HTTP_Listener_config" path="/publish" allowedMethods="GET"/>
+		<file:read doc:name="airports" doc:id="d5daf7a3-6ba0-4c21-b370-50bfb47c56dc" path="C:\workspace\MuleSoft\MuleSoftWithFish\data\airports.csv"/>
+		<jms:publish doc:name="Publish" doc:id="2e0e4d2e-c314-40d7-9427-509f91cae681" config-ref="JMS_Config" destination="airports"/>
+		<set-payload value="Message published to queue. " doc:name="Returned to calling applciation" doc:id="e2df5b47-194d-4155-b74c-d5a1db5de919" />
+	</flow>
+</mule>

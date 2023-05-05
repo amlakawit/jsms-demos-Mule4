@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<flow name="publisher-flow" doc:id="fb292105-94c3-463d-8f57-6ee08b14c70e" >
+		<http:listener doc:name="/POST:publish" doc:id="083b7786-5fc3-43f1-a90f-89940d39350b" config-ref="HTTP_Listener_config" path="/amq-publish" allowedMethods="POST"/>
+		<jms:publish doc:name="Publish" doc:id="0097cdba-cda1-4a9d-a700-1694c8ccc5fc" config-ref="JMS_Config" destination="testTopic" destinationType="TOPIC">
+			<jms:message outboundContentType="application/json" />
+		</jms:publish>
+		<set-payload value="Message published" doc:name="Set Payload" doc:id="28be015a-eecd-4ba6-b346-16a733c87679" />
+	</flow>
+</mule>

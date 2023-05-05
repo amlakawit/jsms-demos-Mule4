@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="amazon-mq-consumerFlow" doc:id="819d976f-a130-4fe7-bd74-431582c2d14f" >
+		<jms:listener doc:name="On New Message" doc:id="4ab06c0e-7a4b-41e1-9d5b-dc92042e25cc" config-ref="JMS_Config" destination="testTopic" inboundContentType="application/json" numberOfConsumers="1">
+			<jms:consumer-type >
+				<jms:topic-consumer />
+			</jms:consumer-type>
+		</jms:listener>
+		<db:bulk-insert doc:name="Bulk insert" doc:id="6bbeb0b0-f5cb-4244-a7f6-0dcdc63d150d" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO airports(name, lat, lon, alt, tz, tzone)
+VALUES (:name, :lat, :lon, :alt, :tz, :tzone)]]></db:sql>
+		</db:bulk-insert>
+		<logger level="INFO" doc:name="Logger" doc:id="ad8f26c7-84e3-49ad-b515-db7c9e7e3bdd" message="Data insereted to database successfully!"/>
+	</flow>
+</mule>
